@@ -1,0 +1,39 @@
+receivers:
+  otlp:
+    protocols:
+      grpc:
+      http:
+        include_metadata: true
+        cors:
+          allowed_origins:
+            - "*"
+          max_age: 7200
+  hostmetrics:
+    scrapers:
+      cpu:
+      disk:
+      filesystem:
+      load:
+      memory:
+      network:
+exporters:
+  logging:
+    loglevel: debug
+  jaeger:
+    endpoint: jaeger:14250
+    tls:
+      insecure: true
+        #  azuremonitor:
+        #    endpoint: "https://dc.services.visualstudio.com/v2/track"
+        #    instrumentation_key: "<add-key>"
+        #    # maxbatchsize is the maximum number of items that can be
+        #    # queued before calling to the configured endpoint
+        #    maxbatchsize: 100
+        #    # maxbatchinterval is the maximum time to wait before calling
+        #    # the configured endpoint.
+        #    maxbatchinterval: 10s
+service:
+  pipelines:
+    traces:
+      receivers: [otlp]
+      exporters: [jaeger]
